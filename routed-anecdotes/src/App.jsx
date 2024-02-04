@@ -3,7 +3,8 @@ import { BrowserRouter as Router,
   Routes,
   Route,
   Link,
-  useMatch
+  useMatch,
+  useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -38,7 +39,7 @@ const Note = ({ anecdote }) => {
     <div>
       <h2>{anecdote.content} by {anecdote.author}</h2>
       <p>has {anecdote.votes} votes</p>
-      <p>for mor info see {anecdote.url}</p>
+      <p>for more info see {anecdote.url}</p>
     </div>
   )
 }
@@ -69,6 +70,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const navigate = useNavigate()
 
 
   const handleSubmit = (e) => {
@@ -79,9 +81,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
-    setContent('')
-    setAuthor('')
-    setInfo('')
+    navigate('/')    
   }
 
   return (
@@ -135,6 +135,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created !`)
+    setTimeout(() => setNotification(''), 5000)
   }
 
   const anecdoteById = (id) =>
@@ -155,6 +157,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
         <Menu />
+        <p>{notification}</p>
         <Routes>
           <Route path='/about' element={<About />} />
           <Route path='/create' element={<CreateNew addNew={addNew} />} />
