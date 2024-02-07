@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import { useState } from 'react'
 import { BrowserRouter as Router,
   Routes,
@@ -85,24 +86,32 @@ const CreateNew = (props) => {
     navigate('/')    
   }
 
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
+  }
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input {...content} />
+          <input {...content} reset='' />
         </div>
         <div>
           author
-          <input {...author} />
+          <input {...author} reset='' />
         </div>
         <div>
           url for more info
-          <input {...info} />
+          <input {...info} reset='' />
         </div>
         <button>create</button>
       </form>
+      <button onClick={(event) => handleReset(event)}>reset</button>
     </div>
   )
 
