@@ -11,11 +11,19 @@ describe('<Blog /> is rendered', () => {
   const handleRemove = jest.fn()
 
   beforeEach(() => {
-    container = render(<Blog
-      blog={{ title:'blog title', author:'blog author', likes: 0, url:'blog url', user:{ name:'user name' } }}
-      handleLike={handleLike}
-      handleRemove={handleRemove}
-    />).container
+    container = render(
+      <Blog
+        blog={{
+          title: 'blog title',
+          author: 'blog author',
+          likes: 0,
+          url: 'blog url',
+          user: { name: 'user name' },
+        }}
+        handleLike={handleLike}
+        handleRemove={handleRemove}
+      />
+    ).container
   })
 
   test('first render hides url and likes', () => {
@@ -47,4 +55,3 @@ describe('<Blog /> is rendered', () => {
     expect(handleLike.mock.calls).toHaveLength(2)
   })
 })
-
