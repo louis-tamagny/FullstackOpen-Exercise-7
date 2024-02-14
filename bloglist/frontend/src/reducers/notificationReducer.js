@@ -23,5 +23,11 @@ const notificationSlice = createSlice({
 })
 
 export const { changeTo, clear } = notificationSlice.actions
+
+export const displayMessage = (text, color) => (dispatch) => {
+  dispatch(changeTo({ text, color }))
+  setTimeout(() => dispatch(clear()), 5000)
+}
+
 export const { selectText, selectColor } = notificationSlice.selectors
 export default notificationSlice.reducer

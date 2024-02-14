@@ -3,20 +3,28 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import Login from './components/Login'
 import blogService from './services/blogs'
 import axios from 'axios'
-import { changeTo, clear } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { displayMessage } from './reducers/notificationReducer'
+import {
+  setBlogs,
+  addBlog,
+  selectBlogs,
+  removeBlog,
+  updateBlog,
+} from './reducers/blogReducer'
+import { useDispatch, useSelector } from 'react-redux'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const dispatch = useDispatch()
+  const blogs = useSelector(selectBlogs)
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    blogService.getAll().then((response) => {
+      dispatch(setBlogs(response))
+    })
   }, [])
 
   useEffect(() => {
@@ -26,42 +34,16 @@ const App = () => {
     }
   }, [])
 
-  const displayMessage = (text, color) => {
-    dispatch(changeTo({ text, color }))
-    setTimeout(() => dispatch(clear()), 5000)
-  }
-
   const sortBlogs = () =>
-    blogs.sort((a, b) => {
+    blogs.toSorted((a, b) => {
       return b.likes - a.likes
     })
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const response = await axios.post('/api/login', {
-        username: username,
-        password: password,
-      })
-      if (response.data) {
-        setUser(response.data)
-        setUsername('')
-        setPassword('')
-        window.localStorage.setItem(
-          'loggedInUser',
-          JSON.stringify(response.data)
-        )
-        displayMessage('Login successful !', 'green')
-      }
-    } catch (error) {
-      displayMessage(error.response.data.error, 'red')
-    }
-  }
   const handleLogout = async (event) => {
     event.preventDefault()
     window.localStorage.removeItem('loggedInUser')
     setUser(null)
-    displayMessage('Logout successful !', 'green')
+    dispatch(displayMessage('Logout successful !', 'green'))
   }
 
   const blogFormRef = useRef()
@@ -79,13 +61,15 @@ const App = () => {
         name: user.name,
         id: user.id,
       }
-      setBlogs(blogs.concat(completeNewUser))
-      displayMessage(
-        `a new blog ${response.data.title} by ${response.data.author} added`,
-        'green'
+      dispatch(addBlog(completeNewUser))
+      dispatch(
+        displayMessage(
+          `a new blog ${response.data.title} by ${response.data.author} added`,
+          'green'
+        )
       )
     } catch (error) {
-      displayMessage(error.response.data.error, 'red')
+      dispatch(displayMessage(error.response.data.error, 'red'))
     }
   }
 
@@ -97,13 +81,15 @@ const App = () => {
         { headers: { Authorization: 'Bearer ' + user.token } }
       )
 
-      blog.likes++
-      displayMessage(
-        `likes for ${blog.title} have been updated : ${blog.likes}`,
-        'green'
+      dispatch(updateBlog({ ...blog, likes: blog.likes + 1 }))
+      dispatch(
+        displayMessage(
+          `likes for ${blog.title} have been updated : ${blog.likes + 1}`,
+          'green'
+        )
       )
     } catch (error) {
-      displayMessage(error.response.data.error, 'red')
+      dispatch(displayMessage(error.response.data.error, 'red'))
     }
   }
 
@@ -117,10 +103,12 @@ const App = () => {
       await axios.delete(`/api/blogs/${blog.id}`, {
         headers: { Authorization: 'Bearer ' + user.token },
       })
-      setBlogs(blogs.filter((b) => b.id !== blog.id))
-      displayMessage(`${blog.title} was deleted successfully`, 'green')
+      dispatch(removeBlog(blog))
+      dispatch(
+        displayMessage(`${blog.title} was deleted successfully`, 'green')
+      )
     } catch (error) {
-      displayMessage(error.response.data.error, 'red')
+      dispatch(displayMessage(error.response.data.error, 'red'))
     }
   }
 
@@ -128,26 +116,7 @@ const App = () => {
     return (
       <div>
         <Notification />
-        <h2>Log in to application</h2>
-        <form id='loginForm' type='submit' onSubmit={handleLogin}>
-          <label>Username: </label>
-          <input
-            id='usernameInput'
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-            type='text'
-          ></input>
-          <br />
-          <label>Password: </label>
-          <input
-            id='passwordInput'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-            type='password'
-          ></input>
-          <br />
-          <input id='loginFormSubmit' type='submit' value='Login'></input>
-        </form>
+        <Login setUser={(user) => setUser(user)} />
       </div>
     )
   }
