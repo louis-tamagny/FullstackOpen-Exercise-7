@@ -5,14 +5,15 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import axios from 'axios'
+import { changeTo, clear } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [message, setMessage] = useState('')
-  const [messageColor, setMessageColor] = useState('red')
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -26,9 +27,8 @@ const App = () => {
   }, [])
 
   const displayMessage = (text, color) => {
-    setMessage(text)
-    setMessageColor(color)
-    setTimeout(() => setMessage(''), 5000)
+    dispatch(changeTo({ text, color }))
+    setTimeout(() => dispatch(clear()), 5000)
   }
 
   const sortBlogs = () =>
@@ -127,7 +127,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification message={message} color={messageColor} />
+        <Notification />
         <h2>Log in to application</h2>
         <form id='loginForm' type='submit' onSubmit={handleLogin}>
           <label>Username: </label>
@@ -154,7 +154,7 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={message} color={messageColor} />
+      <Notification />
       <h2>blogs</h2>
       <p>
         {user.name} logged in

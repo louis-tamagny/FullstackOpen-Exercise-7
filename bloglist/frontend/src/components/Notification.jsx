@@ -1,18 +1,17 @@
-import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
+import { selectText, selectColor } from '../reducers/notificationReducer'
 
-const Notification = ({ message, color }) => {
+const Notification = () => {
+  const message = useSelector(selectText)
+  const color = useSelector(selectColor)
+
   if (message !== '') {
     return (
-      <p id='notification' style={{ color: color, borderColor: color }}>
+      <p id='notification' style={{ color, borderColor: color }}>
         {message}
       </p>
     )
   }
-}
-
-Notification.propTypes = {
-  message: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
 }
 
 export default Notification
