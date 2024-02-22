@@ -32,4 +32,9 @@ usersRouter.get('/', async (request, response) => {
   response.status(200).json(users)
 })
 
+usersRouter.get('/:id', async (request, response) => {
+  const user = await User.findById({ _id: request.params.id })
+  response.status(200).json(user)
+})
+
 module.exports = usersRouter

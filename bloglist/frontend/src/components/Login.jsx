@@ -2,8 +2,9 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useDispatch } from 'react-redux'
 import { displayMessage } from '../reducers/notificationReducer'
+import { setUser } from '../reducers/userReducer'
 
-const Login = ({ setUser }) => {
+const Login = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const dispatch = useDispatch()
@@ -17,7 +18,7 @@ const Login = ({ setUser }) => {
       })
 
       if (response.data) {
-        setUser(response.data)
+        dispatch(setUser(response.data))
         setUsername('')
         setPassword('')
         window.localStorage.setItem(

@@ -10,4 +10,8 @@ ultimate-hooks/public
 bloglist/backend/node_modules
 bloglist/frontend/node_modules
 
+bloglist/backend/node_modules
+bloglist/frontend/node_modules
+bloglist/backend/.env
+
 .vscode
