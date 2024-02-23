@@ -18,6 +18,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import UserView from './components/UserView'
+import SingleUserView from './components/SingleUserView'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -134,6 +135,8 @@ const App = () => {
       </p>
       <Routes>
         <Route path='/users' element={<UserView />} />
+        <Route path='/users/:userId' element={<SingleUserView />} />
+
         <Route
           path='/'
           element={
