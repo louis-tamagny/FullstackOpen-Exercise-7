@@ -19,6 +19,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
 import UserView from './components/UserView'
 import SingleUserView from './components/SingleUserView'
+import BlogView from './components/BlogView'
+import NavMenu from './components/NavMenu'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -43,13 +45,6 @@ const App = () => {
       return b.likes - a.likes
     })
 
-  const handleLogout = async (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedInUser')
-    dispatch(setUser({}))
-    dispatch(displayMessage('Logout successful !', 'green'))
-  }
-
   const blogFormRef = useRef()
 
   const handleCreateBlog = async (newBlog) => {
@@ -69,26 +64,6 @@ const App = () => {
       dispatch(
         displayMessage(
           `a new blog ${response.data.title} by ${response.data.author} added`,
-          'green'
-        )
-      )
-    } catch (error) {
-      dispatch(displayMessage(error.response.data.error, 'red'))
-    }
-  }
-
-  const handleLike = async (blog) => {
-    try {
-      await axios.put(
-        `/api/blogs/${blog.id}`,
-        { ...blog, likes: blog.likes + 1 },
-        { headers: { Authorization: 'Bearer ' + user.token } }
-      )
-
-      dispatch(updateBlog({ ...blog, likes: blog.likes + 1 }))
-      dispatch(
-        displayMessage(
-          `likes for ${blog.title} have been updated : ${blog.likes + 1}`,
           'green'
         )
       )
@@ -127,16 +102,13 @@ const App = () => {
 
   return (
     <div>
+      <NavMenu />
       <Notification />
       <h2>blogs</h2>
-      <p>
-        {user.name} logged in
-        <button onClick={handleLogout}>Logout</button>
-      </p>
       <Routes>
         <Route path='/users' element={<UserView />} />
         <Route path='/users/:userId' element={<SingleUserView />} />
-
+        <Route path='/blogs/:blogId' element={<BlogView />} />
         <Route
           path='/'
           element={
@@ -148,7 +120,6 @@ const App = () => {
                 <Blog
                   key={blog.id}
                   blog={blog}
-                  handleLike={() => handleLike(blog)}
                   handleRemove={() => handleRemove(blog)}
                 />
               ))}

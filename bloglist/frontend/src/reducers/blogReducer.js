@@ -23,9 +23,12 @@ const blogSlice = createSlice({
     selectBlogs(state) {
       return state.listBlogs
     },
+    selectBlog(state, blogId) {
+      return state.listBlogs.find((b) => b.id === blogId)
+    },
   },
 })
 
 export const { addBlog, setBlogs, removeBlog, updateBlog } = blogSlice.actions
-export const { selectBlogs } = blogSlice.selectors
+export const { selectBlogs, selectBlog } = blogSlice.selectors
 export default blogSlice.reducer

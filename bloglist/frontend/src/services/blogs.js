@@ -6,4 +6,10 @@ const getAll = () => {
   return request.then((response) => response.data)
 }
 
-export default { getAll }
+const updateBlog = async (blog, user) => {
+  await axios.put(`/api/blogs/${blog.id}`, blog, {
+    headers: { Authorization: 'Bearer ' + user.token },
+  })
+}
+
+export default { getAll, updateBlog }
