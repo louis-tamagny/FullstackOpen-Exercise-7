@@ -12,4 +12,14 @@ const updateBlog = async (blog, user) => {
   })
 }
 
-export default { getAll, updateBlog }
+const addComment = async (blogId, user, comment) => {
+  await axios.post(
+    `/api/blogs/${blogId}/comments`,
+    { comment },
+    {
+      headers: { Authorization: 'Bearer ' + user.token },
+    }
+  )
+}
+
+export default { getAll, updateBlog, addComment }

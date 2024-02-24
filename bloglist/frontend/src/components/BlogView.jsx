@@ -4,11 +4,13 @@ import { selectBlog, updateBlog } from '../reducers/blogReducer'
 import { displayMessage } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
 import { selectUser } from '../reducers/userReducer'
+import { useState } from 'react'
 
 const BlogView = () => {
   const params = useParams()
   const blog = useSelector((state) => selectBlog(state, params.blogId))
   const user = useSelector(selectUser)
+  const [comment, setComment] = useState('')
   const dispatch = useDispatch()
 
   const handleLike = async () => {
@@ -25,6 +27,28 @@ const BlogView = () => {
     } catch (error) {
       console.log(error)
       //dispatch(displayMessage(error.response.data.error, 'red'))
+    }
+  }
+
+  const handleCreateComment = async (event) => {
+    event.preventDefault()
+    if (comment.length === 0) {
+      dispatch(
+        displayMessage('comment must be at least one character long', 'red')
+      )
+    }
+    try {
+      await blogService.addComment(blog.id, user, comment)
+
+      dispatch(updateBlog({ ...blog, comments: blog.comments.concat(comment) }))
+      dispatch(
+        displayMessage(
+          `A new comment for ${blog.title} have been added : ${comment}`,
+          'green'
+        )
+      )
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -47,6 +71,22 @@ const BlogView = () => {
         <br />
         added by {blog.user.name}
       </p>
+      <h3>comments</h3>
+      <form>
+        <input
+          type='text'
+          value={comment}
+          onChange={(event) => setComment(event.target.value)}
+        ></input>
+        <button type='submit' onClick={(event) => handleCreateComment(event)}>
+          comment
+        </button>
+      </form>
+      <ul>
+        {blog.comments.map((comment, i) => (
+          <li key={i}>{comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }
