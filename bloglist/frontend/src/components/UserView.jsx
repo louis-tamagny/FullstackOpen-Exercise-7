@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react'
 import usersService from '../services/users'
 import { Link } from 'react-router-dom'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@mui/material'
 
 const UserView = () => {
   const [users, setUsers] = useState([])
@@ -11,25 +18,27 @@ const UserView = () => {
   }, [])
   return (
     <>
-      <h2>Users</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td></td>
-            <td>
+      <Typography variant='h2' color='primary'>
+        Users
+      </Typography>
+      <Table>
+        <TableBody>
+          <TableRow>
+            <TableCell></TableCell>
+            <TableCell>
               <b>blogs created</b>
-            </td>
-          </tr>
+            </TableCell>
+          </TableRow>
           {users.map((user) => (
-            <tr key={user.id}>
-              <td>
+            <TableRow key={user.id}>
+              <TableCell>
                 <Link to={user.id}>{user.name}</Link>
-              </td>
-              <td>{user.blogs.length}</td>
-            </tr>
+              </TableCell>
+              <TableCell>{user.blogs.length}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </>
   )
 }

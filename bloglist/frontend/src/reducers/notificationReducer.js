@@ -2,11 +2,11 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const notificationSlice = createSlice({
   name: 'notification',
-  initialState: { text: '', color: 'red' },
+  initialState: { text: '', severity: 'success' },
   reducers: {
     changeTo(state, action) {
       state.text = action.payload.text
-      state.color = action.payload.color
+      state.severity = action.payload.severity
     },
     clear(state) {
       state.text = ''
@@ -16,18 +16,18 @@ const notificationSlice = createSlice({
     selectText(state) {
       return state.text
     },
-    selectColor(state) {
-      return state.color
+    selectSeverity(state) {
+      return state.severity
     },
   },
 })
 
 export const { changeTo, clear } = notificationSlice.actions
 
-export const displayMessage = (text, color) => (dispatch) => {
-  dispatch(changeTo({ text, color }))
+export const displayMessage = (text, severity) => (dispatch) => {
+  dispatch(changeTo({ text, severity }))
   setTimeout(() => dispatch(clear()), 5000)
 }
 
-export const { selectText, selectColor } = notificationSlice.selectors
+export const { selectText, selectSeverity } = notificationSlice.selectors
 export default notificationSlice.reducer

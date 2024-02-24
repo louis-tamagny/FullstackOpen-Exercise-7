@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectUser, setUser } from '../reducers/userReducer'
 import { displayMessage } from '../reducers/notificationReducer'
+import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material'
 
 const NavMenu = () => {
   const dispatch = useDispatch()
@@ -14,17 +15,28 @@ const NavMenu = () => {
     dispatch(displayMessage('Logout successful !', 'green'))
   }
 
-  const displayStyle = {
-    backgroundColor: 'lightGrey',
-  }
-
   return (
-    <div style={displayStyle}>
-      <Link to=''>blogs</Link> <Link to='users'>users</Link>{' '}
-      <>
-        {user.name} logged in <button onClick={handleLogout}>Logout</button>
-      </>
-    </div>
+    <AppBar position='static'>
+      <Toolbar>
+        <Link to=''>
+          <Button color='inherit'>blogs</Button>
+        </Link>
+        <Link to='users'>
+          <Button color='inherit'>users</Button>
+        </Link>
+        <Typography
+          textAlign='right'
+          width='100%'
+          component='div'
+          color='inherit'
+        >
+          {user.name}
+        </Typography>
+        <Button color='inherit' onClick={handleLogout}>
+          Logout
+        </Button>
+      </Toolbar>
+    </AppBar>
   )
 }
 

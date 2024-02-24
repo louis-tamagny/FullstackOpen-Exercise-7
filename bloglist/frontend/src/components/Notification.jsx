@@ -1,15 +1,16 @@
 import { useSelector } from 'react-redux'
-import { selectText, selectColor } from '../reducers/notificationReducer'
+import { selectText, selectSeverity } from '../reducers/notificationReducer'
+import { Alert } from '@mui/material'
 
 const Notification = () => {
   const message = useSelector(selectText)
-  const color = useSelector(selectColor)
+  const severity = useSelector(selectSeverity)
 
   if (message !== '') {
     return (
-      <p id='notification' style={{ color, borderColor: color }}>
+      <Alert id='notification' severity={severity}>
         {message}
-      </p>
+      </Alert>
     )
   }
 }

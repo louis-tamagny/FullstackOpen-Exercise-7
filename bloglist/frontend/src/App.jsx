@@ -13,7 +13,6 @@ import {
   addBlog,
   selectBlogs,
   removeBlog,
-  updateBlog,
 } from './reducers/blogReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { Route, Routes } from 'react-router-dom'
@@ -21,6 +20,7 @@ import UserView from './components/UserView'
 import SingleUserView from './components/SingleUserView'
 import BlogView from './components/BlogView'
 import NavMenu from './components/NavMenu'
+import { Container, Stack, Divider, Typography, Box } from '@mui/material'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -101,10 +101,9 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Container>
       <NavMenu />
       <Notification />
-      <h2>blogs</h2>
       <Routes>
         <Route path='/users' element={<UserView />} />
         <Route path='/users/:userId' element={<SingleUserView />} />
@@ -112,22 +111,28 @@ const App = () => {
         <Route
           path='/'
           element={
-            <>
+            <Box>
+              <Typography variant='h2' color='primary'>
+                Blogs
+              </Typography>
+
               <Togglable buttonLabel='new blog' ref={blogFormRef}>
                 <BlogForm handleCreateBlog={handleCreateBlog} />
               </Togglable>
-              {sortBlogs().map((blog) => (
-                <Blog
-                  key={blog.id}
-                  blog={blog}
-                  handleRemove={() => handleRemove(blog)}
-                />
-              ))}
-            </>
+              <Stack spacing={2} divider={<Divider />}>
+                {sortBlogs().map((blog) => (
+                  <Blog
+                    key={blog.id}
+                    blog={blog}
+                    handleRemove={() => handleRemove(blog)}
+                  />
+                ))}
+              </Stack>
+            </Box>
           }
         />
       </Routes>
-    </div>
+    </Container>
   )
 }
 

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { TextField, Button, FormControl } from '@mui/material'
 
 const BlogForm = ({ handleCreateBlog }) => {
   const [title, setTitle] = useState('')
@@ -20,31 +21,38 @@ const BlogForm = ({ handleCreateBlog }) => {
     <div>
       <h2>Create new blog</h2>
       <form onSubmit={createBlog}>
-        title:
-        <input
-          id='titleInput'
-          type='text'
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
-        <br />
-        author:
-        <input
-          id='authorInput'
-          type='text'
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
-        <br />
-        url:
-        <input
-          id='urlInput'
-          type='text'
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
-        <br />
-        <input id='submitInput' type='submit' value='create' />
+        <FormControl fullWidth={true}>
+          <TextField
+            variant='filled'
+            label='Title:'
+            id='titleInput'
+            type='text'
+            value={title}
+            onChange={({ target }) => setTitle(target.value)}
+          />
+          <br />
+          <TextField
+            variant='filled'
+            label='Author:'
+            id='authorInput'
+            type='text'
+            value={author}
+            onChange={({ target }) => setAuthor(target.value)}
+          />
+          <br />
+          <TextField
+            variant='filled'
+            label='url:'
+            id='urlInput'
+            type='text'
+            value={url}
+            onChange={({ target }) => setUrl(target.value)}
+          />
+          <br />
+          <Button id='submitInput' type='submit'>
+            Create new blog
+          </Button>
+        </FormControl>
       </form>
     </div>
   )

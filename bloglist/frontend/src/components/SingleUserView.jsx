@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import userService from '../services/users'
 import { useParams } from 'react-router-dom'
+import { Divider, List, ListItemText, Typography, Box } from '@mui/material'
 
 const SingleUserView = () => {
   const [user, setUser] = useState({})
@@ -16,14 +17,16 @@ const SingleUserView = () => {
   if (!user.blogs) return <h3>loading</h3>
 
   return (
-    <div>
-      <h3>added blogs</h3>
-      <ul>
+    <Box>
+      <Typography variant='h3' color='primary'>
+        Added blogs
+      </Typography>
+      <List divider={<Divider />}>
         {user.blogs.map((b) => (
-          <li key={b.id}>{b.title}</li>
+          <ListItemText key={b.id}>{b.title}</ListItemText>
         ))}
-      </ul>
-    </div>
+      </List>
+    </Box>
   )
 }
 
